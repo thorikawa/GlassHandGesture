@@ -1,5 +1,5 @@
 #include "Tracker.h"
-#define AREA_THRESHOLD 200
+#define AREA_THRESHOLD 4000
 
 namespace Apps
 {
@@ -88,12 +88,6 @@ namespace Apps
         return Point(rect.x+rect.width/2, rect.y+rect.height/2);
     }
 
-    void Tracker::init () {
-        setSize(IN_WIDTH, IN_HEIGHT, WIDTH, HEIGHT);
-
-        draw = new Draw();
-    }
-
     void Tracker::setSize(int srcWidth, int srcHeight, int destWidth, int destHeight) {
         srcSize = Size(srcWidth, srcHeight);
         destSize = Size(destWidth, destHeight);
@@ -102,72 +96,31 @@ namespace Apps
     }
 
     Tracker::Tracker (string imageFileName) {
-        Mat image = imread(imageFileName);
-        Mat rImage = image(Rect(446, 294, 50, 50));
-        Mat yImage = image(Rect(532, 40, 50, 50));
-        getHSHist(rImage, rHist);
-        getHSHist(yImage, yHist);
-
-        init();
-    }
-
-    Tracker::Tracker(string rImageFile, string yImageFile)  {
-        Mat rImage = imread(rImageFile);
-        Mat yImage = imread(yImageFile);
-        getHSHist(rImage, rHist);
-        getHSHist(yImage, yHist);
-
-        init();
+    	Mat image = imread(imageFileName);
+        getHSHist(image, targetHist);
+        setSize(IN_WIDTH, IN_HEIGHT, WIDTH, HEIGHT);
     }
 
     Tracker::~Tracker() {
     }
 
-    void Tracker::process (Mat& src, Mat& dst) {
+    void Tracker::process (Mat& src, Mat& dst, vector<Rect> &targetRectVec) {
         //cvFlip (frame, frame, 1);
         //dst = frame;
 
         resize(src, dst, destSize);
 
+        int targetFind = 0;
+        Rect targetRect = findMarker(src, targetHist, &targetFind);
 
-        int rFind = 0;
-        int yFind = 0;
-        Rect rRect = findMarker(src, rHist, &rFind);
-        Rect yRect = findMarker(src, yHist, &yFind);
+        LOGD("find=%d\n", targetFind);
 
-        LOGD("R=%d Y=%d\n", rFind, yFind);
+        Point p = center(targetRect);
+        p.x = p.x * wRatio; p.y = p.y * hRatio;
 
-        Point rc = center(rRect);
-        rc.x = rc.x * wRatio; rc.y = rc.y * hRatio;
-        Point yc = center(yRect);
-        yc.x = yc.x * wRatio; yc.y = yc.y * hRatio;
-
-        if(!rFind) rc.x = -1;
-        if(!yFind) yc.x = -1;
-//#if DEBUG
-        if(rFind) rectangle(dst, rRect, CV_RGB(255,0,0), 3);
-        if(yFind) rectangle(dst, yRect, CV_RGB(0,255,0), 3);
-//#endif
-
-        Point zp = Point(0,0);
-        draw->trackMarker(dst, rc, yc, zp, zp);
-    }
-
-    void Tracker::findMarkers (Mat& src, vector<Rect>& rRectVector, vector<Rect>& bRectVector) {
-        int rFind = 0;
-        int bFind = 0;
-        Rect rRect = findMarker(src, rHist, &rFind);
-        Rect bRect = findMarker(src, yHist, &bFind);
-        if (rFind) {
-            rRectVector.push_back(rRect);
-            rectangle(src, rRect, CV_RGB(255,0,0), 3);
+        if (targetFind) {
+        	targetRectVec.push_back(targetRect);
+        	rectangle(dst, targetRect, CV_RGB(255,0,0), 3);
         }
-        if (bFind) {
-            bRectVector.push_back(bRect);
-            rectangle(src, bRect, CV_RGB(0,255,0), 3);
-        }
-        // rRect = 
-
-        LOGD("R=%d B=%d\n", rFind, bFind);
     }
 }

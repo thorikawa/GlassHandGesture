@@ -4,7 +4,6 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/legacy/compat.hpp>
 #include "common.h"
-#include "Draw.h"
 
 using namespace std;
 using namespace cv;
@@ -13,9 +12,7 @@ namespace Apps
 {
     class Tracker {
     private:
-        MatND rHist;
-        MatND yHist;
-        Draw* draw;
+        MatND targetHist;
         double wRatio;
         double hRatio;
         void init ();
@@ -23,10 +20,8 @@ namespace Apps
         Size destSize;
     public:
         Tracker(string imageFileName);
-        Tracker(string rMarkerImage, string yMarkerImage);
         ~Tracker();
-        void process (Mat &src, Mat &dst);
-        void findMarkers (Mat& src, vector<Rect>& rRect, vector<Rect>& bRect);
+        void process (Mat &src, Mat &dst, vector<Rect> &targetRectVec);
         void setSize(int srcWidth, int srcHeight, int destWidth, int destHeight);
   };
 }

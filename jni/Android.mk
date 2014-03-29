@@ -7,7 +7,7 @@ OPENCV_LIB_TYPE:=SHARED
 
 include $(OPENCV_ANDROID_SDK_HOME)/OpenCV.mk
 
-LOCAL_SRC_FILES  := handgesture_jni.cpp Tracker.cpp Draw.cpp
+LOCAL_SRC_FILES  := handgesture_jni.cpp Tracker.cpp
 LOCAL_C_INCLUDES += $(LOCAL_PATH)
 LOCAL_CFLAGS    := -Werror -O3 -ffast-math
 LOCAL_LDLIBS     += -llog -ldl

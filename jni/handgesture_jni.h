@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     com_polysfactory_handgesture_NativeBridge
  * Method:    nativeCreateObject
- * Signature: (Ljava/lang/String;Ljava/lang/String;)J
+ * Signature: (Ljava/lang/String;)J
  */
 JNIEXPORT jlong JNICALL Java_com_polysfactory_handgesture_NativeBridge_nativeCreateObject
-  (JNIEnv *, jclass, jstring, jstring);
+  (JNIEnv *, jclass, jstring);
 
 /*
  * Class:     com_polysfactory_handgesture_NativeBridge
@@ -42,10 +42,10 @@ JNIEXPORT void JNICALL Java_com_polysfactory_handgesture_NativeBridge_nativeStop
 /*
  * Class:     com_polysfactory_handgesture_NativeBridge
  * Method:    nativeProcess
- * Signature: (JJ)V
+ * Signature: (JJJ)V
  */
 JNIEXPORT void JNICALL Java_com_polysfactory_handgesture_NativeBridge_nativeProcess
-  (JNIEnv *, jclass, jlong, jlong);
+  (JNIEnv *, jclass, jlong, jlong, jlong);
 
 /*
  * Class:     com_polysfactory_handgesture_NativeBridge

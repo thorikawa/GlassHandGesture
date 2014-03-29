@@ -1,6 +1,7 @@
 package com.polysfactory.handgesture;
 
 import java.io.File;
+import java.util.List;
 
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
@@ -8,34 +9,44 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfRect;
+import org.opencv.core.Rect;
 import org.opencv.highgui.Highgui;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 
-public class MainActivity extends Activity implements CvCameraViewListener2 {
+import com.polysfactory.handgesture.HandGestureDetector.HandGestureListener;
 
-    private static final int REQUEST_MARKER_CAPTURE = 100;
+public class MainActivity extends Activity implements CvCameraViewListener2, HandGestureListener {
+
+    private static final int REQUEST_CAPTURE_IMAGE = 100;
     private Mat mFrame;
     private NativeBridge mNativeDetector;
 
     private CameraBridgeViewBase mOpenCvCameraView;
 
-    private MenuItem mCaptureRedMenu;
-    private ViewGroup mMarkerPreview;
+    private MenuItem mCaptureTargetMenu;
+    private ViewGroup mTargetImagePreview;
+
+    // private CardScrollView mCardScrollView;
+    private ViewPager mCardScrollView;
+    private ViewGroup mContainer;
+    private HandGestureDetector mHandGestureDetector;
 
     /** Called when the activity is first created. */
     @Override
@@ -52,7 +63,24 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
         mOpenCvCameraView.setCvCameraViewListener(this);
         mOpenCvCameraView.setMaxFrameSize(640, 360);
 
-        mMarkerPreview = (ViewGroup) findViewById(R.id.marker_preview_container);
+        mTargetImagePreview = (ViewGroup) findViewById(R.id.marker_preview_container);
+
+        mContainer = (ViewGroup) findViewById(R.id.container);
+        mCardScrollView = new ViewPager(this);
+        // mCardScrollView.setAdapter(new SampleViewAdapter(this));
+        // mCardScrollView.setOnItemClickListener(new OnItemClickListener() {
+        // @Override
+        // public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+        // openOptionsMenu();
+        // }
+        // });
+        // mCardScrollView.activate();
+        mCardScrollView.setAdapter(new SamplePagerAdapter(this));
+        LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        mContainer.addView(mCardScrollView, 2, lp);
+
+        mHandGestureDetector = new HandGestureDetector();
+        mHandGestureDetector.setHandGestureListener(this);
     }
 
     @Override
@@ -70,8 +98,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     @Override
     public void onResume() {
         super.onResume();
-        setupMarkerPreview();
-        mNativeDetector = new NativeBridge(Marker.HAND.getFilePath(this), Marker.HAND.getFilePath(this));
+        setupTargetImagePreview();
+        mNativeDetector = new NativeBridge(Marker.HAND.getFilePath(this));
         mNativeDetector.start();
         if (mOpenCvCameraView != null) {
             mOpenCvCameraView.enableView();
@@ -96,32 +124,49 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 
-        Log.d(L.TAG, "main:oncamera frame");
-
         mFrame = inputFrame.rgba();
         if (Constants.FLIP) {
             Core.flip(mFrame, mFrame, 1);
         }
 
+        MatOfRect handRectMat = new MatOfRect();
         if (mNativeDetector != null) {
-            mNativeDetector.process(mFrame);
+            mNativeDetector.process(mFrame, handRectMat);
+        }
+        List<Rect> handRectList = handRectMat.toList();
+        if (handRectList.size() > 0) {
+            mHandGestureDetector.handle(handRectList.get(0));
+        } else {
+            mHandGestureDetector.handle(null);
         }
 
         return mFrame;
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_CAMERA) {
+            // Stop the preview and release the camera.
+            // Execute your logic as quickly as possible
+            // so the capture happens quickly.
+            // TODO
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        mCaptureRedMenu = menu.add(R.string.capture_marker);
+        mCaptureTargetMenu = menu.add(R.string.capture_marker);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mCaptureRedMenu == item) {
+        if (mCaptureTargetMenu == item) {
             Intent intent = new Intent(this, CaptureActivity.class);
             intent.putExtra(CaptureActivity.EXTRA_KEY_MARKER, Marker.HAND);
-            startActivityForResult(intent, REQUEST_MARKER_CAPTURE);
+            startActivityForResult(intent, REQUEST_CAPTURE_IMAGE);
         }
         return true;
     }
@@ -129,13 +174,13 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (REQUEST_MARKER_CAPTURE == requestCode) {
+        if (REQUEST_CAPTURE_IMAGE == requestCode) {
             // TODO reload marker
         }
     }
 
-    private void setupMarkerPreview() {
-        mMarkerPreview.removeAllViews();
+    private void setupTargetImagePreview() {
+        mTargetImagePreview.removeAllViews();
         for (final Marker marker : Marker.values()) {
             File markerFile = marker.getFile(this);
             if (!markerFile.exists()) {
@@ -154,16 +199,36 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             imageView.setLayoutParams(parms);
             imageView.setScaleType(ScaleType.CENTER_INSIDE);
             imageView.setImageBitmap(markerBitmap);
-            imageView.setFocusable(true);
-            imageView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
-                    intent.putExtra(CaptureActivity.EXTRA_KEY_MARKER, marker);
-                    startActivityForResult(intent, REQUEST_MARKER_CAPTURE);
-                }
-            });
-            mMarkerPreview.addView(imageView);
+            mTargetImagePreview.addView(imageView);
         }
     }
+
+    @Override
+    public void onLeftMove() {
+        Log.d(L.TAG, "onLeftMove");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                int selected = mCardScrollView.getCurrentItem();
+                if (selected > 0) {
+                    mCardScrollView.setCurrentItem(selected - 1, true);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onRightMove() {
+        Log.d(L.TAG, "onRightMove");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                int selected = mCardScrollView.getCurrentItem();
+                if (selected < mCardScrollView.getAdapter().getCount()) {
+                    mCardScrollView.setCurrentItem(selected + 1, true);
+                }
+            }
+        });
+    }
+
 }

@@ -1,10 +1,11 @@
 package com.polysfactory.handgesture;
 
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfRect;
 
 public class NativeBridge {
-    public NativeBridge(String redMarker, String blueMarker) {
-        mNativeObj = nativeCreateObject(redMarker, blueMarker);
+    public NativeBridge(String redMarker) {
+        mNativeObj = nativeCreateObject(redMarker);
     }
 
     public void start() {
@@ -15,8 +16,8 @@ public class NativeBridge {
         nativeStop(mNativeObj);
     }
 
-    public void process(Mat imageRgba) {
-        nativeProcess(mNativeObj, imageRgba.getNativeObjAddr());
+    public void process(Mat imageRgba, MatOfRect handRect) {
+        nativeProcess(mNativeObj, imageRgba.getNativeObjAddr(), handRect.getNativeObjAddr());
     }
 
     public void release() {
@@ -30,7 +31,7 @@ public class NativeBridge {
 
     private long mNativeObj = 0;
 
-    private static native long nativeCreateObject(String redMarker, String blueMarker);
+    private static native long nativeCreateObject(String redMarker);
 
     private static native void nativeDestroyObject(long thiz);
 
@@ -38,7 +39,7 @@ public class NativeBridge {
 
     private static native void nativeStop(long thiz);
 
-    private static native void nativeProcess(long thiz, long imageRgba);
+    private static native void nativeProcess(long thiz, long imageRgba, long handRect);
 
     private static native void nativeSetSize(long thiz, int srcWidth, int srcHeight, int destWidth, int destHeight);
 }
