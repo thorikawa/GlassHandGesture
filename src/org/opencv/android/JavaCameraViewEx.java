@@ -7,6 +7,8 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+import com.polysfactory.handgesture.Constants;
+
 import android.content.Context;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
@@ -135,6 +137,7 @@ public class JavaCameraViewEx extends CameraBridgeViewBase implements PreviewCal
                 Camera.Parameters params = mCamera.getParameters();
                 Log.d(TAG, "getSupportedPreviewSizes()");
                 List<android.hardware.Camera.Size> sizes = params.getSupportedPreviewSizes();
+                params.setWhiteBalance(Constants.WHITE_BALANCE_MODE);
 
                 if (sizes != null) {
                     for (android.hardware.Camera.Size s : sizes) {

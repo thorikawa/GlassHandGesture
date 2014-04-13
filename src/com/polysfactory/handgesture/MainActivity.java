@@ -22,6 +22,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -61,22 +63,23 @@ public class MainActivity extends Activity implements CvCameraViewListener2, Han
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.fd_activity_surface_view);
         mOpenCvCameraView.setCameraIndex(Constants.CAMERA_INDEX);
         mOpenCvCameraView.setCvCameraViewListener(this);
-        mOpenCvCameraView.setMaxFrameSize(640, 360);
+        // mOpenCvCameraView.setMaxFrameSize(640, 360);
+        mOpenCvCameraView.setMaxFrameSize(320, 192);
 
         mTargetImagePreview = (ViewGroup) findViewById(R.id.marker_preview_container);
 
         mContainer = (ViewGroup) findViewById(R.id.container);
         mCardScrollView = new ViewPager(this);
-        // mCardScrollView.setAdapter(new SampleViewAdapter(this));
-        // mCardScrollView.setOnItemClickListener(new OnItemClickListener() {
-        // @Override
-        // public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-        // openOptionsMenu();
-        // }
-        // });
-        // mCardScrollView.activate();
+        mCardScrollView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openOptionsMenu();
+
+            }
+        });
         mCardScrollView.setAdapter(new SamplePagerAdapter(this));
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        // LayoutParams lp = new LayoutParams(160, 90);
         mContainer.addView(mCardScrollView, 2, lp);
 
         mHandGestureDetector = new HandGestureDetector();

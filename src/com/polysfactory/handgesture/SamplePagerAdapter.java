@@ -12,6 +12,9 @@ public class SamplePagerAdapter extends PagerAdapter {
     private Context mContext;
     private static final String menus[] = new String[] { "Google", "Take picture", "Record video", "Message", "Google",
             "Take picture", "Record video", "Message", "Google", "Take picture", "Record video", "Message" };
+    private static final int images[] = new int[] { R.drawable.image1, R.drawable.image2, R.drawable.image3,
+            R.drawable.image4, R.drawable.image5, R.drawable.image6, R.drawable.image1, R.drawable.image2,
+            R.drawable.image3, R.drawable.image4, R.drawable.image5, R.drawable.image6 };
 
     public SamplePagerAdapter(Context context) {
         mContext = context;
@@ -22,6 +25,7 @@ public class SamplePagerAdapter extends PagerAdapter {
         Card card = new Card(mContext);
         card.setText(menus[position]);
         card.setFootnote("card #" + position);
+        card.addImage(images[position]);
         View view = card.toView();
         container.addView(view);
         return view;

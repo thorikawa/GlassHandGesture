@@ -5,7 +5,7 @@ import java.io.File;
 import android.content.Context;
 
 public enum Marker {
-    HAND("marker_hand.jpg", R.raw.red);
+    HAND("marker_hand.jpg", R.raw.hand);
 
     String filename;
 

@@ -5,6 +5,7 @@ import org.opencv.core.Rect;
 import android.util.Log;
 
 public class HandGestureDetector {
+
     interface HandGestureListener {
         void onLeftMove();
 
@@ -16,7 +17,10 @@ public class HandGestureDetector {
     }
 
     private static final long TIME_THRESHOLD = 800;
-    private static final int PADDING = 180;
+    // private static final int FRAME_WIDTH = 640;
+    // private static final int PADDING = 180;
+    private static final int FRAME_WIDTH = 320;
+    private static final int PADDING = 90;
     private static final int MAX_SEQ_LOST = 2;
     private State lastState = State.LOST;
     private long lastStateTime;
@@ -26,7 +30,7 @@ public class HandGestureDetector {
     private State currentState(Rect rect) {
         int centerX = rect.x + rect.width / 2;
         Log.d(L.TAG, "centerX:" + centerX);
-        if (centerX > 640 - PADDING) {
+        if (centerX > FRAME_WIDTH - PADDING) {
             return State.RIGHT;
         } else if (centerX < PADDING) {
             return State.LEFT;

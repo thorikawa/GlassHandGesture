@@ -1,6 +1,7 @@
 package com.polysfactory.handgesture;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,7 +17,21 @@ public class IOUtils {
     }
 
     public static boolean copy(Context context, int res, File file) {
-        InputStream is = context.getResources().openRawResource(res);
+        copy(context, context.getResources().openRawResource(res), file);
+        return true;
+    }
+
+    public static boolean copy(Context context, File in, File file) {
+        try {
+            copy(context, new FileInputStream(in), file);
+        } catch (FileNotFoundException e) {
+            Log.e(L.TAG, "file copy error", e);
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean copy(Context context, InputStream is, File file) {
         FileOutputStream os = null;
         try {
             os = new FileOutputStream(file);

@@ -1,5 +1,6 @@
 #include "Tracker.h"
-#define AREA_THRESHOLD 4000
+//#define AREA_THRESHOLD 4000
+#define AREA_THRESHOLD 1000
 
 namespace Apps
 {
