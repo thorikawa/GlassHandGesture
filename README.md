@@ -3,7 +3,7 @@ GlassHandGesture
 
 Simple demo app of hand gesture (swipe motion) recognition on Google Glass
 
-## Demo Video
+## Demo
 <a href="https://www.youtube.com/watch?v=g2gWza8Z7ig"><img src="http://thorikawa.github.io/GlassHandGesture/img/youtube.png" /></a>
 
 ## How it works
