@@ -13,9 +13,9 @@ To make it work, first you need to calibrate with your skin color.
 - Tap the touchpad
 - Select "capture marker" menu
 <img src="http://thorikawa.github.io/GlassHandGesture/img/capture_marker.png" />
-- Put your hand in front of camera so that your skin covers whole red square area.
+- Put your hand in front of camera so that your skin covers whole red square area, then tap "capture" button.
 <img src="http://thorikawa.github.io/GlassHandGesture/img/skin_capture.png" />
-- Select "ok" to use that image or select "retake" to capture your skin again.
+- Tap "ok" button to use that image or tap "retake" button to capture your skin again.
 
 ## How to build
 ### Requirement
