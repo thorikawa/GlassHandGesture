@@ -135,10 +135,9 @@ public class JavaCameraViewEx extends CameraBridgeViewBase implements PreviewCal
             /* Now set camera parameters */
             try {
                 Camera.Parameters params = mCamera.getParameters();
-                Log.d(TAG, "getSupportedPreviewSizes()");
-                List<android.hardware.Camera.Size> sizes = params.getSupportedPreviewSizes();
-                params.setWhiteBalance(Constants.WHITE_BALANCE_MODE);
+                params.setWhiteBalance(Camera.Parameters.WHITE_BALANCE_SHADE);
 
+                List<android.hardware.Camera.Size> sizes = params.getSupportedPreviewSizes();
                 if (sizes != null) {
                     for (android.hardware.Camera.Size s : sizes) {
                         Log.d(TAG, "size:" + s.width + "," + s.height);

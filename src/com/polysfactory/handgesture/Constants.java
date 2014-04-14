@@ -21,5 +21,4 @@ public class Constants {
             FLIP = false;
         }
     }
-    public static String WHITE_BALANCE_MODE = Camera.Parameters.WHITE_BALANCE_SHADE;
 }
