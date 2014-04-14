@@ -7,7 +7,15 @@ Simple demo app of hand gesture (swipe motion) recognition on Google Glass
 <a href="https://www.youtube.com/watch?v=g2gWza8Z7ig"><img src="http://thorikawa.github.io/GlassHandGesture/img/youtube.png" /></a>
 
 ## How it works
-GlassHandGesture detects hand by comparing color histogram with your skin color. To make it work, first you need to calibrate with your skin color. 
+GlassHandGesture detects hand by comparing color histogram with your skin color. 
+
+To make it work, first you need to calibrate with your skin color.
+- Tap the touchpad
+- Select "capture marker" menu
+<img src="http://thorikawa.github.io/GlassHandGesture/img/capture_marker.png" />
+- Put your hand in front of camera so that your skin covers whole red square area.
+<img src="http://thorikawa.github.io/GlassHandGesture/img/skin_capture.png" />
+- Select ok to use that image or select retake to capture your skin again.
 
 ## How to build
 ### Requirement
