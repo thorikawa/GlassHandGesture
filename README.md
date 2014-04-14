@@ -34,7 +34,7 @@ $ export OPENCV_ANDROID_SDK_HOME=<PATH_TO_OPENCV_ANDROID_SDK>
 ```
 $ cd <PROJECT_ROOT_DIRECTORY>
 $ ndk-build
-$ and clean debug install
+$ ant clean debug install
 ```
 
 ## License
