@@ -15,7 +15,7 @@ To make it work, first you need to calibrate with your skin color.
 <img src="http://thorikawa.github.io/GlassHandGesture/img/capture_marker.png" />
 - Put your hand in front of camera so that your skin covers whole red square area.
 <img src="http://thorikawa.github.io/GlassHandGesture/img/skin_capture.png" />
-- Select ok to use that image or select retake to capture your skin again.
+- Select "ok" to use that image or select "retake" to capture your skin again.
 
 ## How to build
 ### Requirement
