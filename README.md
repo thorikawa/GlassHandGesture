@@ -6,6 +6,11 @@ Simple demo app of hand gesture (swipe motion) recognition on Google Glass
 ## Demo
 <a href="https://www.youtube.com/watch?v=g2gWza8Z7ig"><img src="http://thorikawa.github.io/GlassHandGesture/img/youtube.png" /></a>
 
+### Download
+[v0.1 apk file](https://github.com/thorikawa/GlassHandGesture/releases/download/v0.1/GlassHandGesture-0.1.0.apk)
+
+See [How to: Sideload Google Glass apps using ADB on Windows](http://googleglassfans.com/archives/3054/sideload-google-glass-apps-windows/) or [How to: Sideload Google Glass apps using ADB on a Mac](http://googleglassfans.com/archives/2924/set-adb-mac-sideload-apps-google-glass/) to sideload apk file.
+
 ## How it works
 GlassHandGesture detects hand by comparing color histogram with your skin color. 
 
