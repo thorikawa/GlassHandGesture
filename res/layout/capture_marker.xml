@@ -1,18 +1,21 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:focusable="false" >
 
     <org.opencv.android.JavaCameraViewEx
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="top|center_horizontal" />
+        android:layout_gravity="top|center_horizontal"
+        android:focusable="false" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
+        android:focusable="false"
         android:gravity="center"
         android:orientation="horizontal" >
 
@@ -20,19 +23,8 @@
             android:id="@+id/button_capture"
             android:layout_width="100dp"
             android:layout_height="60dp"
+            android:focusable="true"
             android:text="@string/capture" />
-
-        <Button
-            android:id="@+id/button_select_done"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:text="@string/selected" />
-
-        <Button
-            android:id="@+id/button_capture_again"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:text="@string/capture_again" />
     </LinearLayout>
 
 </FrameLayout>

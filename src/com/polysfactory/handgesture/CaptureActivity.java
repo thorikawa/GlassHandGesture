@@ -29,10 +29,6 @@ public class CaptureActivity extends Activity implements CvCameraViewListener2, 
 
     private Button finishCaptureButton;
 
-    private Button captureAgainButton;
-
-    private Button finishSelectButton;
-
     enum State {
         CAMERA, SELECTING, TRACKING
     }
@@ -60,10 +56,6 @@ public class CaptureActivity extends Activity implements CvCameraViewListener2, 
 
         finishCaptureButton = (Button) findViewById(R.id.button_capture);
         finishCaptureButton.setOnClickListener(this);
-        captureAgainButton = (Button) findViewById(R.id.button_capture_again);
-        captureAgainButton.setOnClickListener(this);
-        finishSelectButton = (Button) findViewById(R.id.button_select_done);
-        finishSelectButton.setOnClickListener(this);
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.camera_view);
 
         mOpenCvCameraView.setCvCameraViewListener(this);
@@ -124,21 +116,29 @@ public class CaptureActivity extends Activity implements CvCameraViewListener2, 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.d(L.TAG, "called onCreateOptionsMenu");
+        menu.add(R.string.selected);
+        menu.add(R.string.capture_again);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(L.TAG, "called onOptionsItemSelected; selected item: " + item);
+        String title = item.getTitle().toString();
+        if (title.equals(getString(R.string.selected))) {
+            finishSelecting();
+            setResult(999);
+            finish();
+        } else if (title.equals(getString(R.string.capture_again))) {
+            startCameraMode();
+        }
         return true;
     }
 
     private void startCameraMode() {
         mState = State.CAMERA;
         mOpenCvCameraView.enableView();
-        captureAgainButton.setVisibility(View.GONE);
         finishCaptureButton.setVisibility(View.VISIBLE);
-        finishSelectButton.setVisibility(View.GONE);
     }
 
     private void finishSelecting() {
@@ -150,9 +150,7 @@ public class CaptureActivity extends Activity implements CvCameraViewListener2, 
     private void startSelectMode() {
         mState = State.SELECTING;
         mOpenCvCameraView.disableView();
-        captureAgainButton.setVisibility(View.VISIBLE);
-        finishCaptureButton.setVisibility(View.GONE);
-        finishSelectButton.setVisibility(View.VISIBLE);
+        openOptionsMenu();
     }
 
     @Override
@@ -160,14 +158,6 @@ public class CaptureActivity extends Activity implements CvCameraViewListener2, 
         switch (v.getId()) {
         case R.id.button_capture:
             startSelectMode();
-            break;
-        case R.id.button_capture_again:
-            startCameraMode();
-            break;
-        case R.id.button_select_done:
-            finishSelecting();
-            setResult(999);
-            finish();
             break;
         default:
             break;

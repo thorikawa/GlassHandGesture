@@ -26,7 +26,7 @@ public class SamplePagerAdapter extends PagerAdapter {
         card.setText(menus[position]);
         card.setFootnote("card #" + position);
         card.addImage(images[position]);
-        View view = card.toView();
+        View view = card.getView();
         container.addView(view);
         return view;
     }
