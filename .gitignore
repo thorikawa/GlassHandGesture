@@ -36,3 +36,6 @@ proguard/
 
 # Mac OS
 .DS_Store
+
+releasekey.keystore
+ant.properties
